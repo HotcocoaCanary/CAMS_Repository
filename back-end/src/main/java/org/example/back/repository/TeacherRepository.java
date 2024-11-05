@@ -11,5 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @creat 2024/11/5 下午4:43
  **/
 public interface TeacherRepository extends JpaRepository<Teacher, String> {
+    void addTeacher(Teacher teacher);
+    Teacher findTeacherByIdAndPassword(String id, String password);
+    Teacher findTeacherByIdAndName(String id, String name);
 }
-

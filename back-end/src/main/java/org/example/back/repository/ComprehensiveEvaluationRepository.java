@@ -1,6 +1,6 @@
 package org.example.back.repository;
 import org.example.back.entity.ComprehensiveEvaluation;
-import org.example.back.entity.Term;
+import org.example.back.common.Term;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

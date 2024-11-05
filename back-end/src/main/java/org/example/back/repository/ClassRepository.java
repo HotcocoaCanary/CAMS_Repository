@@ -11,5 +11,5 @@ import org.example.back.entity.Class;
  * @creat 2024/11/5 下午4:44
  **/
 public interface ClassRepository extends JpaRepository<Class, Integer> {
-
+    Class findByName(String name);
 }

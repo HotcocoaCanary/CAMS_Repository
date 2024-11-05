@@ -67,3 +67,9 @@ CREATE TABLE Comprehensive_Evaluation
     PRIMARY KEY (ID),
     CONSTRAINT fk_Comprehensive_Evaluation_StudentID FOREIGN KEY (StudentID) REFERENCES Students (ID)
 );
+
+insert into teachers value
+    ('0001', '123456', '陈俊杰', '18', '女', '计算机与信息工程学院');
+
+insert into classes(ClassName, ClassTeacher,Department) value
+    ('软工一班', '0001', '计算机与信息工程学院')

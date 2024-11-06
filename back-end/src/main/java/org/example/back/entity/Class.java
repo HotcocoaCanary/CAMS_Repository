@@ -1,27 +1,31 @@
 package org.example.back.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * @author Canary
- * @version 1.0.0
- * @creat 2024/11/5 下午4:34
- **/
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "Classes")
+@Table(name = "classes", schema = "cams_repository_db")
 public class Class {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer classID;
-    private String className;
-    @ManyToOne
-    @JoinColumn(name = "ClassTeacher", referencedColumnName = "ID")
-    private Teacher classTeacher;
+    @Column(name = "ID", nullable = false)
+    private Integer id;
+
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "Name", nullable = false, length = 50)
+    private String name;
+
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "Department", nullable = false, length = 50)
     private String department;
+
 }

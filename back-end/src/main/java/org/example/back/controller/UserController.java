@@ -2,13 +2,8 @@ package org.example.back.controller;
 
 import jakarta.annotation.Resource;
 import org.example.back.common.Response;
-import org.example.back.entity.User;
-import org.example.back.service.UserService;
 import org.example.back.util.JwtUtil;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +19,15 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public Response<String> register(String id, String password, String name, byte age,  String gender, String department, String className) {
+    public Response<String> register(String id, String password, String name, String age, String gender, String department, String className) {
         if (className !=null){
             //查询用户
             User u = userService.findStudentById(id);
+            int ageInt = Integer.parseInt(age);
             if (u == null) {
                 //没有占用
                 //注册
-                userService.register(id, password, name, age, gender, department, className);
+                userService.register(id, password, name, ageInt, gender, department, className);
                 return Response.success();
             } else {
                 //占用
@@ -40,10 +36,11 @@ public class UserController {
         }else{
             //查询用户
             User u = userService.findTeacherById(id);
+            int ageInt = Integer.parseInt(age);
             if (u == null) {
                 //没有占用
                 //注册
-                userService.register(id, password, name, age, gender, department);
+                userService.register(id, password, name, ageInt, gender, department);
                 return Response.success();
             } else {
                 //占用

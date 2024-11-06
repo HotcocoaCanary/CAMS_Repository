@@ -1,13 +1,5 @@
 package service;
 
-import org.example.back.entity.Class;
-import org.example.back.entity.Student;
-import org.example.back.entity.Teacher;
-import org.example.back.entity.User;
-import org.example.back.repository.ClassRepository;
-import org.example.back.repository.StudentRepository;
-import org.example.back.repository.TeacherRepository;
-import org.example.back.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +51,7 @@ public class UserServiceTest {
     public void testLoginStudentSuccess() {
         String id = "student1";
         String password = "password";
-        Class mockClass = classRepository.findByName("软工一班");
+        Class mockClass = classRepository.findByClassName("软工一班");
         Student mockStudent = new Student(id, password, "李四", (byte) 20, "女", "计算机科学", mockClass);
         when(studentRepository.findStudentByIdAndPassword(id, password)).thenReturn(mockStudent);
 
@@ -82,15 +74,15 @@ public class UserServiceTest {
         String department = "物理";
         String className = "软工一班";
         // 创建模拟的Class对象
-        Class mockClass = classRepository.findByName("软工一班");
+        Class mockClass = classRepository.findByClassName("软工一班");
         // 当调用findByName时，返回mockClass
-        when(classRepository.findByName(className)).thenReturn(mockClass);
+        when(classRepository.findByClassName(className)).thenReturn(mockClass);
         // 调用注册方法
         userService.register(id, password, name, age, gender, department, className);
         // 验证classRepository的findByName方法是否被调用了一次
-        verify(classRepository,times(2)).findByName(className);
+        verify(classRepository,times(2)).findByClassName(className);
         // 验证studentRepository的addStudent方法是否被调用了一次，参数任意
-        verify(studentRepository).addStudent(any(Student.class));
+        verify(studentRepository).save(any(Student.class));
     }
 
 
@@ -111,7 +103,7 @@ public class UserServiceTest {
     @Test
     public void testFindStudentById() {
         String id = "student1";
-        Class mockClass = classRepository.findByName("软工一班");
+        Class mockClass = classRepository.findByClassName("软工一班");
         Student mockStudent = new Student(id, "password", "李四", (byte) 20, "女", "计算机科学", mockClass);
         when(studentRepository.findById(id)).thenReturn(Optional.of(mockStudent));
 

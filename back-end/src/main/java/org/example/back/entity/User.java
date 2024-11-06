@@ -11,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @Entity
-@Table(name = "users", schema = "cams_repository_db")
+@Table(name = "users")
 public class User {
     @Id
     @Size(max = 50)
@@ -29,24 +29,18 @@ public class User {
     private String name;
 
     @NotNull
-    @ColumnDefault("'男'")
     @Lob
     @Column(name = "Gender", nullable = false)
     private String gender;
 
-    @Size(max = 50)
-    @NotNull
-    @Column(name = "Department", nullable = false, length = 50)
-    private String department;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ClassID")
-    private Class classID;
+    @JoinColumn(name = "ClassName")
+    private Class className;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Lob
     @Column(name = "Role", nullable = false)
-    @Enumerated(EnumType.STRING)
     private Role role;
 
 }

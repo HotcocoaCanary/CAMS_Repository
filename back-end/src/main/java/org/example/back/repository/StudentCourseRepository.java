@@ -4,8 +4,6 @@ import org.example.back.entity.StudentCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * @author Canary
  * @version 1.0.0
@@ -17,6 +15,4 @@ import java.util.List;
 
 @Repository
 public interface StudentCourseRepository extends JpaRepository<StudentCourse, Long> {
-    // 根据学生ID查找学生课程
-    List<StudentCourse> findById(String studentId);
 }

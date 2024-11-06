@@ -12,16 +12,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "classes", schema = "cams_repository_db")
+@Table(name = "classes")
 public class Class {
     @Id
-    @Column(name = "ID", nullable = false)
-    private Integer id;
+    @Size(max = 50)
+    @Column(name = "Name", nullable = false, length = 50)
+    private String name;
 
     @Size(max = 50)
     @NotNull
-    @Column(name = "Name", nullable = false, length = 50)
-    private String name;
+    @Column(name = "Grade", nullable = false, length = 50)
+    private String grade;
 
     @Size(max = 50)
     @NotNull

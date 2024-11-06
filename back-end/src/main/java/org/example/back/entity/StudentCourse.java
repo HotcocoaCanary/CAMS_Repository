@@ -1,48 +1,54 @@
 package org.example.back.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.back.common.CourseStats;
+import org.example.back.common.Term;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 
-/**
- * @author Canary
- * @version 1.0.0
- * @creat 2024/11/5 下午4:39
- **/
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "Student_Course")
+@Table(name = "student_course", schema = "cams_repository_db")
 public class StudentCourse {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "ID", nullable = false)
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "StudentID", referencedColumnName = "ID")
-    private Student student;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "StudentID", nullable = false)
+    private User studentID;
 
-    @Column(name = "CourseID")
-    private String courseID;
-
-    @Column(name = "Name")
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "Name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "Score")
+    @Column(name = "Score", precision = 5, scale = 2)
     private BigDecimal score;
 
-    @Column(name = "Credit")
-    private byte credit;
+    @NotNull
+    @Column(name = "Credit", nullable = false)
+    private Integer credit;
 
+    @NotNull
+    @ColumnDefault("'REQUIRED'")
     @Enumerated(EnumType.STRING)
-    @Column(name = "Stats")
+    @Lob
+    @Column(name = "Stats", nullable = false)
     private CourseStats stats;
 
+    @NotNull
+    @ColumnDefault("'FRESHMAN_FALL'")
     @Enumerated(EnumType.STRING)
-    @Column(name = "Term")
+    @Lob
+    @Column(name = "Term", nullable = false)
     private Term term;
+
 }

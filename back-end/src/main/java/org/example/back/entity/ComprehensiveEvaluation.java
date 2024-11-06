@@ -1,43 +1,48 @@
 package org.example.back.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.back.common.Term;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "Comprehensive_Evaluation")
+@Table(name = "comprehensive_evaluation", schema = "cams_repository_db")
 public class ComprehensiveEvaluation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "ID", nullable = false)
+    private Integer id;
 
+    @NotNull
+    @ColumnDefault("'FRESHMAN_FALL'")
     @Enumerated(EnumType.STRING)
-    @Column(name = "Term")
+    @Lob
+    @Column(name = "Term", nullable = false)
     private Term term;
 
-    @Column(name = "Academic_Performance")
+    @Column(name = "Academic_Performance", precision = 5, scale = 2)
     private BigDecimal academicPerformance;
 
-    @Column(name = "Morality")
+    @Column(name = "Morality", precision = 5, scale = 2)
     private BigDecimal morality;
 
-    @Column(name = "Sports_Achievement")
+    @Column(name = "Sports_Achievement", precision = 5, scale = 2)
     private BigDecimal sportsAchievement;
 
-    @Column(name = "Other_Score1")
+    @Column(name = "Other_Score1", precision = 5, scale = 2)
     private BigDecimal otherScore1;
 
-    @Column(name = "Other_Score2")
+    @Column(name = "Other_Score2", precision = 5, scale = 2)
     private BigDecimal otherScore2;
 
-    @ManyToOne
-    @JoinColumn(name = "StudentID", referencedColumnName = "ID")
-    private Student student;
-}
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "StudentID", nullable = false)
+    private User studentID;
 
+}

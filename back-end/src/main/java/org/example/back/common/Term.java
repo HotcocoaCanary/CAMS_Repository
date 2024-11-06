@@ -1,4 +1,6 @@
-package org.example.back.entity;
+package org.example.back.common;
+
+import lombok.Getter;
 
 /**
  * @author Canary
@@ -7,6 +9,8 @@ package org.example.back.entity;
  * @description <TODO description class purpose>
  * @creat 2024/11/5 下午4:39
  **/ // Enum for Term
+
+@Getter
 public enum Term {
     FRESHMAN_FALL, // 大一上
     FRESHMAN_SPRING, // 大一下

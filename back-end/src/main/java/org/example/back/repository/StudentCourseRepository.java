@@ -18,5 +18,5 @@ import java.util.List;
 @Repository
 public interface StudentCourseRepository extends JpaRepository<StudentCourse, Long> {
     // 根据学生ID查找学生课程
-    List<StudentCourse> findByStudentId(String studentId);
+    List<StudentCourse> findById(String studentId);
 }

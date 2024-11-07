@@ -1,26 +1,41 @@
 CREATE DATABASE CAMS_repository_db;
 USE CAMS_repository_db;
 
--- 班级表
-CREATE TABLE Classes
-(
-    Name       varchar(50) NOT NULL,                # 班级名称
-    Grade      varchar(50) NOT NULL,
-    Department varchar(50) NOT NULL,                # 所属院系
-    PRIMARY KEY (Name)
-);
-
 -- 用户表（教师和学生合并）
 CREATE TABLE Users
 (
     ID         varchar(50)                       NOT NULL,              # 工号/学号，主键
     Password   varchar(50)                       NOT NULL,              # 密码
     Name       varchar(50)                       NOT NULL,              # 姓名
-    Gender     enum ('男','女')                  NOT NULL DEFAULT '男', # 性别
-    Class_name    varchar(50),                                                     # 班级编号，外键
-    Role       enum ('TEACHER', 'STUDENT', 'ADMIN') NOT NULL,              # 身份
-    PRIMARY KEY (ID),
-    CONSTRAINT fk_Users_ClassID FOREIGN KEY (Class_name) REFERENCES Classes (Name)
+    Gender varchar(50)                                    NOT NULL,     # 性别
+    Role   enum ('TEACHER', 'STUDENT' ,'ADMIN') NOT NULL,     # 身份
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE Teachers
+(
+    TeacherID  varchar(50) PRIMARY KEY,
+    Department varchar(50) NOT NULL,
+    FOREIGN KEY (TeacherID) REFERENCES Users (ID)
+);
+
+-- 班级表
+CREATE TABLE Classes
+(
+    Name       varchar(50) NOT NULL, # 班级名称
+    Grade      varchar(50) NOT NULL,
+    Department varchar(50) NOT NULL, # 所属院系
+    TeacherID  varchar(50),
+    PRIMARY KEY (Name),
+    FOREIGN KEY (TeacherID) REFERENCES Teachers (TeacherID)
+);
+
+CREATE TABLE Students
+(
+    StudentID  varchar(50) PRIMARY KEY,
+    Class_name varchar(50),
+    FOREIGN KEY (StudentID) REFERENCES Users (ID),
+    FOREIGN KEY (Class_name) REFERENCES Classes (Name)
 );
 
 -- 学生选课表（更新分数范围）
@@ -50,4 +65,14 @@ CREATE TABLE Comprehensive_Evaluation
     CONSTRAINT fk_Comprehensive_Evaluation_StudentID FOREIGN KEY (StudentID) REFERENCES Users (ID)
 );
 
-select * from users
+insert into users
+values ('T001', 'T001', '陈', '女', 'TEACHER'),
+       ('T002', 'T002', '乌', '男', 'TEACHER');
+
+insert into teachers
+values ('T001', '计算机与信息工程学院'),
+       ('T002', '计算机与信息工程学院');
+
+insert into classes
+values ('软工一班', '2022', '计算机与信息工程学院', 'T001'),
+       ('软工二班', '2022', '计算机与信息工程学院', 'T002')

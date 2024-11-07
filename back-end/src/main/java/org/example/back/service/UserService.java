@@ -1,5 +1,6 @@
 package org.example.back.service;
 
+import org.example.back.entity.Class;
 import org.example.back.entity.User;
 
 /**
@@ -11,5 +12,5 @@ import org.example.back.entity.User;
  **/
 public interface UserService {
     User login(String id, String password);
-    String register(User user);
+    String register(User user, String department);
 }

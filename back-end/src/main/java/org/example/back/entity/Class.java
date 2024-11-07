@@ -1,9 +1,6 @@
 package org.example.back.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -28,5 +25,9 @@ public class Class {
     @NotNull
     @Column(name = "Department", nullable = false, length = 50)
     private String department;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TeacherID")
+    private Teacher teacherID;
 
 }

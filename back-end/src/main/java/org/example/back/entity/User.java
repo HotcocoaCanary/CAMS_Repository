@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.back.common.Role;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -28,14 +27,10 @@ public class User {
     @Column(name = "Name", nullable = false, length = 50)
     private String name;
 
+    @Size(max = 50)
     @NotNull
-    @Lob
-    @Column(name = "Gender", nullable = false)
+    @Column(name = "Gender", nullable = false, length = 50)
     private String gender;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ClassName")
-    private Class className;
 
     @NotNull
     @Enumerated(EnumType.STRING)

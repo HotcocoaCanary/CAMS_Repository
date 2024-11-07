@@ -1,25 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DashBoard from "@/views/home/DashBoard.vue";
-import Login from "@/components/member/Login.vue";
 import Maintain from "@/views/view/Maintain.vue";
 import Import from "@/views/view/Import.vue";
 import Approval from "@/views/view/Approval.vue";
 import Search from "@/views/view/Search.vue";
 import Container from "@/views/Container.vue";
 import From from "@/views/From.vue";
+import Home from "@/views/home/Home.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'dashboard',
+      name: 'home',
       component: Container,
-      redirect: '/dashboard',
+      redirect: '/home',
       children:[
         {
-          path: '/dashboard',
-          component: DashBoard
+          path: '/home',
+          component: Home
         },{
           path: '/maintain',
           component: Maintain
@@ -36,8 +35,8 @@ const router = createRouter({
       ]
     },
     {
-      path: '/member',
-      name: 'member',
+      path: '/login',
+      name: 'login',
       component: From
     }
   ]

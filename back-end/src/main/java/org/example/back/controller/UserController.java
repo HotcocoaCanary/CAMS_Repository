@@ -5,9 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.back.common.Response;
-import org.example.back.common.Role;
 import org.example.back.common.request.LoginRequest;
-import org.example.back.entity.Class;
 import org.example.back.entity.User;
 import org.example.back.service.UserService;
 import org.example.back.common.request.RegisterRequest;
@@ -56,6 +54,25 @@ public class UserController {
             }
         } catch (Exception e) {
             // 可以记录日志
+            return Response.internalServerError();
+        }
+    }
+
+    @GetMapping("/logout")
+    public Response<String> logout(HttpSession session, HttpServletResponse response) {
+        try{
+            // 清除会话信息
+            session.invalidate();
+
+            // 删除记住我cookie
+            Cookie cookie = new Cookie("rememberMe", null);
+            cookie.setMaxAge(0); // 立即删除cookie
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            response.addCookie(cookie);
+
+            return Response.success("退出登录成功");
+        } catch (Exception e) {
             return Response.internalServerError();
         }
     }

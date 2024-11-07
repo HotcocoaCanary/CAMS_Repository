@@ -29,8 +29,8 @@ public class StudentCourseId implements java.io.Serializable {
     private String name;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     @ColumnDefault("'FRESHMAN_FALL'")
+    @Enumerated(EnumType.STRING)
     @Lob
     @Column(name = "Term", nullable = false)
     private Term term;

@@ -5,11 +5,11 @@
       <form @submit.prevent="submitForm" name="registerForm">
         <label>
           学号
-          <input type="text" v-model="id" class="input" required/>
+          <input type="text" v-model="id" class="input" :required="role !== 'TEACHER'" />
         </label>
         <label>
           用户名
-          <input type="text" v-model="name" class="input" required/>
+          <input type="text" v-model="name" class="input" required />
         </label>
         <label>
           密码
@@ -23,16 +23,19 @@
           </select>
         </label>
         <label>
-          院系
-          <input type="text" v-model="className.department" class="input" required>
+          角色
+          <select v-model="role" class="input">
+            <option value="STUDENT">学生</option>
+            <option value="TEACHER">班主任教师</option>
+          </select>
         </label>
-        <label>
-          年级
-          <input type="text" v-model="className.grade" class="input" required>
+        <label v-if="role === 'TEACHER'">
+          学院
+          <input type="text" v-model="classNameOrDepartment" class="input" required />
         </label>
-        <label>
+        <label v-else>
           班级
-          <input type="text" v-model="className.name" class="input" required>
+          <input type="text" v-model="classNameOrDepartment" class="input" required />
         </label>
         <button class="submitButton">注册</button>
       </form>
@@ -43,6 +46,7 @@
 <script>
 import {userRegisterService} from "@/api/user.js";
 import {ElMessage} from "element-plus";
+
 export default {
   data() {
     return {
@@ -50,27 +54,25 @@ export default {
       name: '',
       password: '',
       gender: '男', // 默认选中"男"
-      className: {
-        department: '',
-        grade: '',
-        name: ''
-      },
-      role: 'STUDENT', // 根据需求，这里可以设置为常量或动态获取
+      role: 'STUDENT', // 默认角色为学生
+      classNameOrDepartment: '', // 用于存储学院或班级信息
     };
   },
   methods: {
     async submitForm() {
-      try {
-        // 使用userRegisterService发送注册请求
-        await userRegisterService({
+      const registerData = {
+        user: {
           id: this.id,
           password: this.password,
           name: this.name,
           gender: this.gender,
-          className: JSON.stringify(this.className), // 假设后端需要className为字符串格式
-          role: this.role
-        });
-        ElMessage.success('注册成功')
+          role: this.role,
+        },
+        classNameOrDepartment: this.classNameOrDepartment,
+      };
+      try {
+        await userRegisterService(registerData);
+        ElMessage.success('注册成功');
       } catch (error) {
         ElMessage.error('注册失败，请稍后再试');
       }

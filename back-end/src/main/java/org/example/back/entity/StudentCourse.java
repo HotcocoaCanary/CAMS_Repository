@@ -30,8 +30,8 @@ public class StudentCourse {
     private Integer credit;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     @ColumnDefault("'REQUIRED'")
+    @Enumerated(EnumType.STRING)
     @Lob
     @Column(name = "Stats", nullable = false)
     private CourseStats stats;

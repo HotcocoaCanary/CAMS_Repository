@@ -9,14 +9,12 @@ import org.example.back.common.Term;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.io.Serial;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Embeddable
 public class ComprehensiveEvaluationId implements java.io.Serializable {
-    @Serial
     private static final long serialVersionUID = 3443463218373598782L;
     @Size(max = 50)
     @NotNull
@@ -24,8 +22,8 @@ public class ComprehensiveEvaluationId implements java.io.Serializable {
     private String studentID;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     @ColumnDefault("'FRESHMAN_FALL'")
+    @Enumerated(EnumType.STRING)
     @Lob
     @Column(name = "Term", nullable = false)
     private Term term;
@@ -35,7 +33,8 @@ public class ComprehensiveEvaluationId implements java.io.Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         ComprehensiveEvaluationId entity = (ComprehensiveEvaluationId) o;
-        return Objects.equals(this.studentID, entity.studentID) && Objects.equals(this.term, entity.term);
+        return Objects.equals(this.studentID, entity.studentID) &&
+                Objects.equals(this.term, entity.term);
     }
 
     @Override

@@ -92,13 +92,14 @@ public class CourseExcelList {
     }
 
     private Term determineTerm(int studentYear, String semester) {
-        boolean isFall = semester.equals("秋");
+        boolean isFall = semester.equals("春");
 
         return switch (studentYear) {
-            case 0 -> isFall ? Term.FRESHMAN_FALL : Term.FRESHMAN_SPRING;
-            case 1 -> isFall ? Term.SOPHOMORE_FALL : Term.SOPHOMORE_SPRING;
-            case 2 -> isFall ? Term.JUNIOR_FALL : Term.JUNIOR_SPRING;
-            case 3 -> isFall ? Term.SENIOR_FALL : Term.SENIOR_SPRING;
+            case 0 -> Term.FRESHMAN_FALL;
+            case 1 -> isFall ? Term.FRESHMAN_SPRING: Term.SOPHOMORE_FALL;
+            case 2 -> isFall ? Term.SOPHOMORE_SPRING:Term.JUNIOR_FALL;
+            case 3 -> isFall ? Term.JUNIOR_SPRING:Term.SENIOR_FALL;
+            case 4 -> Term.SOPHOMORE_SPRING;
             default -> throw new IllegalArgumentException("Invalid student year");
         };
     }

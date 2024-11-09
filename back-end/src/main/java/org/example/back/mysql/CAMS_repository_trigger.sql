@@ -85,25 +85,27 @@ BEGIN
     DECLARE student_term enum ('FRESHMAN_FALL', 'FRESHMAN_SPRING', 'SOPHOMORE_FALL', 'SOPHOMORE_SPRING', 'JUNIOR_FALL', 'JUNIOR_SPRING', 'SENIOR_FALL', 'SENIOR_SPRING');
     -- 获取学生对应的学期
     SET student_term = OLD.Term;
-    -- 计算总分和总学分
-    SELECT SUM(SC.Score * SC.Credit), SUM(SC.Credit)
-    INTO total_score, total_credits
-    FROM Student_Course SC
-    WHERE SC.StudentID = OLD.StudentID
-      AND SC.Term = student_term;
-    -- 计算平均分
-    SET avg_score = (total_score / total_credits)*0.6;
-    -- 检查Comprehensive_Evaluation表中是否存在对应的记录
-    IF EXISTS (SELECT 1 FROM Comprehensive_Evaluation WHERE StudentID = OLD.StudentID AND Term = student_term) THEN
-        -- 更新记录
-        UPDATE Comprehensive_Evaluation
-        SET Academic_Performance = avg_score
+    -- 检查总学分是否为0
+    IF total_credits = 0 THEN
+        -- 如果总学分为0，则删除Comprehensive_Evaluation表中的对应记录
+        DELETE FROM Comprehensive_Evaluation
         WHERE StudentID = OLD.StudentID
           AND Term = student_term;
     ELSE
-        -- 插入新记录
-        INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance)
-        VALUES (OLD.StudentID, student_term, avg_score);
+        -- 计算平均分
+        SET avg_score = (total_score / total_credits) * 0.6;
+        -- 检查Comprehensive_Evaluation表中是否存在对应的记录
+        IF EXISTS (SELECT 1 FROM Comprehensive_Evaluation WHERE StudentID = OLD.StudentID AND Term = student_term) THEN
+            -- 更新记录
+            UPDATE Comprehensive_Evaluation
+            SET Academic_Performance = avg_score
+            WHERE StudentID = OLD.StudentID
+              AND Term = student_term;
+        ELSE
+            -- 插入新记录
+            INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance)
+            VALUES (OLD.StudentID, student_term, avg_score);
+        END IF;
     END IF;
 END$$
 

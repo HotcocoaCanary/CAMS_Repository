@@ -3,7 +3,9 @@ package org.example.back.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.back.common.Term;
 import org.hibernate.Hibernate;
@@ -14,6 +16,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class ComprehensiveEvaluationId implements java.io.Serializable {
     private static final long serialVersionUID = 3443463218373598782L;
     @Size(max = 50)

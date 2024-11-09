@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author Canary
  * @version 1.0.0
  * @title FileUpdata
- * @description <TODO description class purpose>
+ * @description
  * @creat 2024/11/8 下午10:33
  **/
 public interface FileUploadService {

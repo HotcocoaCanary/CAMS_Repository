@@ -2,6 +2,7 @@ package org.example.back.repository;
 
 import org.example.back.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Canary
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @description <TODO description class purpose>
  * @creat 2024/11/5 下午4:43
  **/
+@Repository
 public interface UserRepository extends JpaRepository<User, String> {
 }
 

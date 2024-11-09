@@ -44,7 +44,7 @@ CREATE TABLE Student_Course
     StudentID varchar(50)                 NOT NULL,                                                                     # 学生学号，外键（指向Users表的ID）
     Name      varchar(50)                 NOT NULL,                                                                     # 课程名称
     Score     decimal(5, 2) CHECK (Score >= 0 AND Score <= 100),                                                        # 成绩，范围0-100
-    Credit    int                         NOT NULL,                                                                     # 学分
+    Credit    double                      NOT NULL,                                                                     # 学分
     Stats     enum ('REQUIRED', 'LIMITED', 'ELECTIVE') NOT NULL DEFAULT 'REQUIRED',                                                      # 选课属性
     Term      enum ('FRESHMAN_FALL', 'FRESHMAN_SPRING', 'SOPHOMORE_FALL', 'SOPHOMORE_SPRING', 'JUNIOR_FALL', 'JUNIOR_SPRING', 'SENIOR_FALL', 'SENIOR_SPRING') NOT NULL DEFAULT 'FRESHMAN_FALL', # 学期
     PRIMARY KEY (StudentID,Name,Term),
@@ -64,15 +64,3 @@ CREATE TABLE Comprehensive_Evaluation
     PRIMARY KEY (StudentID,Term),
     CONSTRAINT fk_Comprehensive_Evaluation_StudentID FOREIGN KEY (StudentID) REFERENCES Users (ID)
 );
-
-insert into users
-values ('T001', 'T001', '陈', '女', 'TEACHER'),
-       ('T002', 'T002', '乌', '男', 'TEACHER');
-
-insert into teachers
-values ('T001', '计算机与信息工程学院'),
-       ('T002', '计算机与信息工程学院');
-
-insert into classes
-values ('软工一班', '2022', '计算机与信息工程学院', 'T001'),
-       ('软工二班', '2022', '计算机与信息工程学院', 'T002')

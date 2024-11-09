@@ -2,7 +2,9 @@ package org.example.back.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.back.common.CourseStats;
 import org.hibernate.annotations.ColumnDefault;
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "student_course")
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentCourse {
     @EmbeddedId
     private StudentCourseId id;
@@ -27,7 +31,7 @@ public class StudentCourse {
 
     @NotNull
     @Column(name = "Credit", nullable = false)
-    private Integer credit;
+    private Double credit;
 
     @NotNull
     @ColumnDefault("'REQUIRED'")

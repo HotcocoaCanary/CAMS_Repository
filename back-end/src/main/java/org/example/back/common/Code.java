@@ -15,7 +15,7 @@ public enum Code {
     NO_CONTENT(204, "操作成功，无返回内容"),
 
     BAD_REQUEST(400, "错误的请求"),
-    UNAUTHORIZED(401, "未授权"),
+    UNAUTHORIZED(401, "No permission"),
     FORBIDDEN(403, "禁止访问"),
     NOT_FOUND(404, "未找到资源"),
 

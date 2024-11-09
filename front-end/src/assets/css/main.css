@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* 这将包括padding和border在内的总宽度和高度 */
+}
 html, body, #app {
   margin: 0;
   padding: 0;

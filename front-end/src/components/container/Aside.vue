@@ -1,13 +1,14 @@
 <template>
   <div class="sidebar-container">
+    <div class="sidebar-header">我的侧边栏</div>
     <el-menu
-        default-active="dashboard"
+        default-active="/home"
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
         router
         background-color="#2c3e50"
-        text-color="#fff"
+        text-color="1a1a1a"
         active-text-color="#42b983"
         :collapse-transition="false"
     >
@@ -32,6 +33,7 @@
         <template #title>我的审批</template>
       </el-menu-item>
     </el-menu>
+    <div class="sidebar-footer">我的侧边栏</div>
   </div>
 </template>
 
@@ -51,46 +53,71 @@ export default {
 
 <style scoped>
 .sidebar-container {
-  width: 100%;
-  height: 98%;
-  background-color: #2c3e50; /* 更深的蓝色背景 */
+  height: 100vh;
+  overflow-y: auto; /* 添加垂直滚动条 */
+  background-color: #ffffff; /* 浅色背景 */
+  color: #333; /* 深色文本 */
+}
+
+.sidebar-header {
+  display: flex; /* 使用Flexbox布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  position: sticky;
+  top: 0;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 1.2em; /* 设置与#header相同的字体大小 */
+  height: 60px; /* 设置与#header相同的高度 */
+  text-align: center; /* 文本居中 */
+  z-index: 1000;
+  margin-bottom: 30px;
+}
+
+.sidebar-footer {
+  display: flex; /* 使用Flexbox布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 250px;
+  height: 60px;
+  background-color: #333; /* 底部背景颜色 */
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 1em; /* 根据需要设置字体大小 */
+  z-index: 1000; /* 确保底部在其他元素之上 */
 }
 
 .el-menu-vertical-demo {
-  width: 96%;
-  height: 100%;
+  width: 100%; /* 调整宽度以匹配容器 */
   border-right: none; /* 移除边框 */
-}
-
-.menu-item {
-  border-radius: 5px;
-  transition: all 0.3s ease-in-out; /* 更平滑的过渡效果 */
-  background: linear-gradient(to right, #35495e, #2c3e50); /* 更深的渐变色 */
-  margin: 5px 0;
-  position: relative;
-  z-index: 1;
-}
-
-.menu-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* 更细腻的阴影效果 */
-}
-
-.menu-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.1); /* 添加半透明的背景层 */
-  z-index: -1;
-  border-radius: 5px;
+  background-color: #fff !important; /* 覆盖默认的背景颜色 */
+  color: #1a1a1a; /* 菜单文本颜色 */
+  transition: background-color 0.3s ease; /* 添加过渡效果 */
 }
 
 .rounded-menu-item {
-  border-radius: 0 10px 10px 0;
-  box-shadow: 5px 0 5px rgba(0, 0, 0, 0.3);
+  margin: 5px;
+  border-radius: 8px; /* 添加圆角 */
+  transition: background-color 0.3s ease; /* 添加过渡效果 */
 }
 
+.menu-item i {
+  color: #717171FF; /* 图标颜色 */
+}
+
+/* 选中菜单项的样式 */
+.el-menu-item.is-active {
+  background-color: #007bff !important; /* 选中背景颜色 */
+  color: #ffffff !important; /* 选中文本颜色 */
+}
+
+/* 鼠标悬停菜单项的样式 */
+.el-menu-item:hover {
+  background-color: #007bff !important; /* 悬停背景颜色 */
+  color: #ffffff !important; /* 悬停文本颜色 */
+}
 </style>

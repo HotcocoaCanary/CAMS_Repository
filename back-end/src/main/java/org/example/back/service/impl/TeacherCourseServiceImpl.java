@@ -9,7 +9,7 @@ import org.example.back.repository.ComprehensiveEvaluationRepository;
 import org.example.back.repository.StudentCourseRepository;
 import org.example.back.repository.StudentRepository;
 import org.example.back.repository.UserRepository;
-import org.example.back.service.CourseService;
+import org.example.back.service.TeacherCourseService;
 import org.example.back.util.CourseExcelList;
 import org.example.back.util.OtherCourseExcelList;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import java.util.Map;
  * @creat 2024/11/8 下午10:32
  **/
 @Service
-public class CourseServiceImpl implements CourseService {
+public class TeacherCourseServiceImpl implements TeacherCourseService {
 
     @Resource
     private StudentCourseRepository studentCourseRepository;

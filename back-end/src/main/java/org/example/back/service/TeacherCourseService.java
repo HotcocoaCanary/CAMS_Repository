@@ -6,11 +6,11 @@ import org.example.back.entity.StudentCourse;
 /**
  * @author Canary
  * @version 1.0.0
- * @title CourseService
+ * @title TeacherCourseService
  * @description
  * @creat 2024/11/8 下午10:28
  **/
-public interface CourseService {
+public interface TeacherCourseService {
 
     void updateCourse(String fileName) throws Exception;
 

@@ -29,7 +29,7 @@ public class TeacherInterceptor implements HandlerInterceptor {
         User loginUser = (User) session.getAttribute("user");
 
         // 根据用户角色判断是否有权限访问资源
-        if (Role.TEACHER.equals(loginUser.getRole())) {
+        if (Role.TEACHER.equals(loginUser.getRole())||Role.ADMIN.equals(loginUser.getRole())) {
             return true; // 如果是教师，则放行
         } else {
             // 如果权限不足，可以设置响应状态码为403

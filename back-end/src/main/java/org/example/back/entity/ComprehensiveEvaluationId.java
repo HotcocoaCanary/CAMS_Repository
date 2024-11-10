@@ -11,6 +11,7 @@ import org.example.back.common.Term;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.io.Serial;
 import java.util.Objects;
 
 @Getter

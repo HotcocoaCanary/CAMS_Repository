@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Response<String> login(@RequestBody LoginRequest loginRequest, HttpSession session, HttpServletResponse response) {
+    public Response<User> login(@RequestBody LoginRequest loginRequest, HttpSession session, HttpServletResponse response) {
         try {
             User user = userService.login(loginRequest.getId(), loginRequest.getPassword());
             if (user != null) {
@@ -48,7 +48,7 @@ public class UserController {
                     cookie.setSecure(true); // 确保在HTTPS下传输
                     response.addCookie(cookie);
                 }
-                return Response.success("登录成功");
+                return Response.success(user);
             } else {
                 // 用户不存在或密码错误，返回具体错误信息
                 return Response.badRequest("用户不存在或密码错误");

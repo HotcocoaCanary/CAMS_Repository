@@ -12,4 +12,5 @@ import org.example.back.entity.User;
 public interface UserService {
     User login(String id, String password);
     String register(User user, String department);
+    String editPassword(String id, String password, String newPassword);
 }

@@ -23,8 +23,9 @@
 
 <script>
 import { userLoginService } from "@/api/user.js"; // 使用登录服务
-import { ElMessage } from "element-plus";
+import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
+import emitter from "@/utils/emitter.js";
 
 export default {
   data() {
@@ -37,14 +38,14 @@ export default {
   methods: {
     async submitForm() {
       try {
-        // 使用userLoginService发送登录请求
-        await userLoginService({
+        const response = await userLoginService({
           id: this.id,
           password: this.password,
           rememberMe: this.rememberMe
         });
-        ElMessage.success('登录成功');
-        await router.push('/dashboard');
+        console.log(response);
+        emitter.emit('sendUser', response)
+        await router.push('/home');
       } catch (error) {
         ElMessage.error('登录失败，请稍后再试');
       }

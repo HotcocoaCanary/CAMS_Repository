@@ -7,6 +7,7 @@ import org.example.back.repository.StudentRepository;
 import org.example.back.repository.TeacherRepository;
 import org.example.back.repository.UserRepository;
 import org.example.back.service.UserService;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -51,5 +52,24 @@ public class UserServiceImpl implements UserService {
             teacherRepository.addTeacher(user.getId(), classNameOrDepartment);
         }
         return "注册成功";
+    }
+
+    @Override
+    public String editPassword(String id, String password, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // 验证旧密码
+            if (userOptional.get().getPassword().equals(password)) {
+                // 更新为新密码（先加密）
+                user.setPassword(newPassword);
+                userRepository.save(user);
+                return "密码更新成功";
+            } else {
+                return "密码错误";//先输入正确的旧密码才可以修改
+            }
+        } else {
+            return "未找到用户";
+        }
     }
 }

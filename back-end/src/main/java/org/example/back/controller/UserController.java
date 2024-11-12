@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.back.common.Response;
+import org.example.back.common.request.EditPasswordRequest;
 import org.example.back.common.request.LoginRequest;
 import org.example.back.entity.User;
 import org.example.back.service.UserService;
@@ -52,6 +53,20 @@ public class UserController {
                 // 用户不存在或密码错误，返回具体错误信息
                 return Response.badRequest("用户不存在或密码错误");
             }
+        } catch (Exception e) {
+            // 可以记录日志
+            return Response.internalServerError();
+        }
+    }
+
+    @PostMapping("/editPassword")
+    public Response<String> editPassword(@RequestBody EditPasswordRequest data) {
+        try {
+            String id = data.getId();
+            String password = data.getPassword();
+            String newPassword = data.getNewPassword();
+            String message = userService.editPassword(id, password, newPassword);
+            return Response.success(message);
         } catch (Exception e) {
             // 可以记录日志
             return Response.internalServerError();

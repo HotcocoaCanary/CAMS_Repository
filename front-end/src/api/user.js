@@ -25,3 +25,13 @@ export const userLoginService = (loginData) => {
     };
     return request.post('/user/login', jsonData, config);
 }
+
+// 提供调用退出登录接口的函数
+export const userLogout = () => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    return request.get('/user/logout', config);
+}

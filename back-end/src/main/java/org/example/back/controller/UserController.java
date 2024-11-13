@@ -48,6 +48,7 @@ public class UserController {
                     cookie.setSecure(true); // 确保在HTTPS下传输
                     response.addCookie(cookie);
                 }
+                user.setPassword("总要有所坚持");
                 return Response.success(user);
             } else {
                 // 用户不存在或密码错误，返回具体错误信息

@@ -1,8 +1,8 @@
 <template>
   <div class="sidebar-container">
-    <div class="sidebar-header">我的侧边栏</div>
+    <div class="sidebar-header">菜单</div>
     <el-menu
-        default-active="/home"
+        :default-active="defaultActive"
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
@@ -33,13 +33,29 @@
         <template #title>我的审批</template>
       </el-menu-item>
     </el-menu>
-    <div class="sidebar-footer">我的侧边栏</div>
+    <div class="sidebar-footer">感谢支持</div>
   </div>
 </template>
 
 <script>
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+
 export default {
   name: 'SideBar',
+  setup() {
+    const router = useRouter();
+    const defaultActive = ref(router.currentRoute.value.path);
+
+    // 监听路由变化，更新菜单选中状态
+    watch(() => router.currentRoute.value.path, (newPath) => {
+      defaultActive.value = newPath;
+    });
+
+    return {
+      defaultActive,
+    };
+  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -48,7 +64,7 @@ export default {
       console.log(key, keyPath);
     }
   }
-}
+};
 </script>
 
 <style scoped>

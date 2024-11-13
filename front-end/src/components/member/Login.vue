@@ -21,35 +21,31 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import { userLoginService } from "@/api/user.js"; // 使用登录服务
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 import router from "@/router/index.js";
-import emitter from "@/utils/emitter.js";
+import { useUserStore } from "@/stores/user.js";
 
-export default {
-  data() {
-    return {
-      id: '', // 添加id字段
-      password: '',
-      rememberMe: false,
-    };
-  },
-  methods: {
-    async submitForm() {
-      try {
-        const response = await userLoginService({
-          id: this.id,
-          password: this.password,
-          rememberMe: this.rememberMe
-        });
-        console.log(response);
-        emitter.emit('sendUser', response)
-        await router.push('/home');
-      } catch (error) {
-        ElMessage.error('登录失败，请稍后再试');
-      }
-    }
+const userStore = useUserStore();
+
+const id = ref(''); // 使用ref来定义响应式数据
+const password = ref('');
+const rememberMe = ref(false);
+
+const submitForm = async () => {
+  try {
+    const response = await userLoginService({
+      id: id.value,
+      password: password.value,
+      rememberMe: rememberMe.value
+    });
+    console.log(response);
+    userStore.setUser(response);
+    await router.push('/home');
+  } catch (error) {
+    ElMessage.error('登录失败，请稍后再试');
   }
 };
 </script>

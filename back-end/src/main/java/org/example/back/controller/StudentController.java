@@ -1,24 +1,28 @@
 package org.example.back.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.example.back.common.Response;
 import org.example.back.common.Term;
-import org.example.back.common.request.StudentScoreRequest;
-import org.example.back.entity.ComprehensiveEvaluation;
-import org.example.back.service.StudentCourseService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.back.entity.User;
+import org.example.back.service.CourseService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
- * @author Canary
- * @version 1.0.0
- * @title StudentController
+ * @title UserStudentController
  * @description <TODO description class purpose>
- * @creat 2024/11/9 下午11:17
+ * @author Canary
+ * @creat 2024/11/13 下午11:40
+ * @version 1.0.0
  **/
 
 @RestController
@@ -26,17 +30,29 @@ import java.util.List;
 public class StudentController {
 
     @Resource
-    private StudentCourseService studentCourseService;
+    private CourseService courseService;
 
-    @PostMapping("/score")
-    public Response<List<ComprehensiveEvaluation>> getScoreByClassAndTerm(@RequestBody StudentScoreRequest studentScoreRequest) {
-        try{
-            String className = studentScoreRequest.getClassName();
-            Term term = studentScoreRequest.getTerm();
-            List<ComprehensiveEvaluation> list = studentCourseService.getComprehensiveEvaluation(className, term);
-            return Response.success(list);
-        }catch (Exception e){
-            return Response.internalServerError();
-        }
+    @GetMapping("/ce")
+    public ResponseEntity<byte[]> register(@RequestParam Term term, HttpSession session) throws IOException {
+        User loginUser = (User) session.getAttribute("user");
+
+        Workbook workbook = courseService.getComprehensiveEvaluation(loginUser, term);
+
+        // 将Workbook写入ByteArrayOutputStream
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        workbook.write(baos);
+        baos.close();
+
+        // 设置HTTP响应头
+        byte[] bytes = baos.toByteArray();
+        String filename = "ComprehensiveEvaluation_" + loginUser.getId() + ".xlsx";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData(filename, filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        // 返回ResponseEntity
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
+
 }

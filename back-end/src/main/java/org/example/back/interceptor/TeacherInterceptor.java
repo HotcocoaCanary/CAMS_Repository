@@ -13,7 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @author Canary
  * @version 1.0.0
  * @title TeacherInterceptor
- * @description <TODO description class purpose>
+ * @description
  * @creat 2024/11/9 下午9:49
  **/
 

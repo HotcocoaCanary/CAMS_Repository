@@ -2,11 +2,11 @@ package org.example.back.repository;
 
 import jakarta.transaction.Transactional;
 import org.example.back.common.Term;
-import org.example.back.entity.Class;
 import org.example.back.entity.ComprehensiveEvaluation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,5 +35,9 @@ public interface ComprehensiveEvaluationRepository extends JpaRepository<Compreh
             "SET ce.otherScore2 = :otherScore2 " +
             "WHERE ce.id.studentID = :studentId AND ce.id.term = :term")
     void updateOtherScore2(Double otherScore2, String studentId, Term term);
+
+    @Query("SELECT ce FROM ComprehensiveEvaluation ce " +
+            "WHERE ce.id.term = :term")
+    List<ComprehensiveEvaluation> findAllCEByTerm(@Param("term") Term term);
 }
 

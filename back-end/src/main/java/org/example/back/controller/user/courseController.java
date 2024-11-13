@@ -1,15 +1,22 @@
-package org.example.back.controller;
+package org.example.back.controller.user;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.example.back.common.Response;
 import org.example.back.common.Term;
-import org.example.back.service.courseService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.back.entity.User;
+import org.example.back.service.CourseService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +34,7 @@ import java.nio.file.StandardCopyOption;
 public class courseController {
 
     @Resource
-    private courseService courseService;
+    private CourseService courseService;
     // 定义文件保存的路径
     private static final String UPLOAD_DIR = "src\\main\\java\\org\\example\\back\\data\\";
 
@@ -76,6 +83,28 @@ public class courseController {
             // 这里可以添加日志记录
             return Response.internalServerError();
         }
+    }
+
+    @GetMapping("/ce")
+    public ResponseEntity<byte[]> register(@RequestParam Term term) throws IOException {
+
+        Workbook workbook = courseService.getComprehensiveEvaluation(term);
+
+        // 将Workbook写入ByteArrayOutputStream
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        workbook.write(baos);
+        baos.close();
+
+        // 设置HTTP响应头
+        byte[] bytes = baos.toByteArray();
+        String filename = term.toString()+"ce.xlsx";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData(filename, filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        // 返回ResponseEntity
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
     // 生成唯一文件名的方法

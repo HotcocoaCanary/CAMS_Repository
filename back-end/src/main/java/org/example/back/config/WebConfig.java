@@ -19,12 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        System.out.println("Registering interceptors...");
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login", "/user/register"); // 排除login和register
         registry.addInterceptor(teacherInterceptor)
-                .addPathPatterns("/teacher")
+                .addPathPatterns("/course")
                 .excludePathPatterns("/admin");
     }
 }

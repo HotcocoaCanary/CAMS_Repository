@@ -27,9 +27,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 打印Session为空时的信息
-        System.out.println("User not logged in, returning 401");
-
         // 返回401未授权状态码
         response.setStatus(Code.UNAUTHORIZED.getCode());
         response.getWriter().write(Code.UNAUTHORIZED.getDescription());

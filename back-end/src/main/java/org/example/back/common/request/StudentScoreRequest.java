@@ -7,7 +7,7 @@ import org.example.back.common.Term;
  * @author Canary
  * @version 1.0.0
  * @title StudentScoreRequst
- * @description <TODO description class purpose>
+ * @description
  * @creat 2024/11/10 上午11:14
  **/
 @Data

@@ -8,6 +8,7 @@ BEGIN
     DECLARE total_score decimal(10, 2);
     DECLARE total_credits int;
     DECLARE avg_score decimal(5, 2);
+    DECLARE failed_courses int;
     DECLARE student_term enum ('FRESHMAN_FALL', 'FRESHMAN_SPRING', 'SOPHOMORE_FALL', 'SOPHOMORE_SPRING', 'JUNIOR_FALL', 'JUNIOR_SPRING', 'SENIOR_FALL', 'SENIOR_SPRING');
     -- 获取学生对应的学期
     SET student_term = NEW.Term;
@@ -19,17 +20,24 @@ BEGIN
       AND SC.Term = student_term;
     -- 计算平均分
     SET avg_score = (total_score / total_credits)*0.6;
+    -- 统计Score为0的课程数量
+    SELECT COUNT(*)
+    INTO failed_courses
+    FROM Student_Course SC
+    WHERE SC.StudentID = NEW.StudentID
+      AND SC.Term = student_term
+      AND SC.Score = 0;
     -- 检查Comprehensive_Evaluation表中是否存在对应的记录
     IF EXISTS (SELECT 1 FROM Comprehensive_Evaluation WHERE StudentID = NEW.StudentID AND Term = student_term) THEN
         -- 更新记录
         UPDATE Comprehensive_Evaluation
-        SET Academic_Performance = avg_score
+        SET Academic_Performance = avg_score, Failed_courses = failed_courses
         WHERE StudentID = NEW.StudentID
           AND Term = student_term;
     ELSE
         -- 插入新记录
-        INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance)
-        VALUES (NEW.StudentID, student_term, avg_score);
+        INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance, Failed_courses)
+        VALUES (NEW.StudentID, student_term, avg_score, failed_courses);
     END IF;
 END$$
 
@@ -45,6 +53,7 @@ BEGIN
     DECLARE total_score decimal(10, 2);
     DECLARE total_credits int;
     DECLARE avg_score decimal(5, 2);
+    DECLARE failed_courses int;
     DECLARE student_term enum ('FRESHMAN_FALL', 'FRESHMAN_SPRING', 'SOPHOMORE_FALL', 'SOPHOMORE_SPRING', 'JUNIOR_FALL', 'JUNIOR_SPRING', 'SENIOR_FALL', 'SENIOR_SPRING');
     -- 获取学生对应的学期
     SET student_term = NEW.Term;
@@ -56,17 +65,24 @@ BEGIN
       AND SC.Term = student_term;
     -- 计算平均分
     SET avg_score = (total_score / total_credits)*0.6;
+    -- 统计Score为0的课程数量
+    SELECT COUNT(*)
+    INTO failed_courses
+    FROM Student_Course SC
+    WHERE SC.StudentID = NEW.StudentID
+      AND SC.Term = student_term
+      AND SC.Score = 0;
     -- 检查Comprehensive_Evaluation表中是否存在对应的记录
     IF EXISTS (SELECT 1 FROM Comprehensive_Evaluation WHERE StudentID = NEW.StudentID AND Term = student_term) THEN
         -- 更新记录
         UPDATE Comprehensive_Evaluation
-        SET Academic_Performance = avg_score
+        SET Academic_Performance = avg_score, Failed_courses = failed_courses
         WHERE StudentID = NEW.StudentID
           AND Term = student_term;
     ELSE
         -- 插入新记录
-        INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance)
-        VALUES (NEW.StudentID, student_term, avg_score);
+        INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance, Failed_courses)
+        VALUES (NEW.StudentID, student_term, avg_score, failed_courses);
     END IF;
 END$$
 
@@ -82,6 +98,7 @@ BEGIN
     DECLARE total_score decimal(10, 2);
     DECLARE total_credits int;
     DECLARE avg_score decimal(5, 2);
+    DECLARE failed_courses int;
     DECLARE student_term enum ('FRESHMAN_FALL', 'FRESHMAN_SPRING', 'SOPHOMORE_FALL', 'SOPHOMORE_SPRING', 'JUNIOR_FALL', 'JUNIOR_SPRING', 'SENIOR_FALL', 'SENIOR_SPRING');
     -- 获取学生对应的学期
     SET student_term = OLD.Term;
@@ -94,17 +111,24 @@ BEGIN
     ELSE
         -- 计算平均分
         SET avg_score = (total_score / total_credits) * 0.6;
+        -- 统计Score为0的课程数量
+        SELECT COUNT(*)
+        INTO failed_courses
+        FROM Student_Course SC
+        WHERE SC.StudentID = OLD.StudentID
+          AND SC.Term = student_term
+          AND SC.Score = 0;
         -- 检查Comprehensive_Evaluation表中是否存在对应的记录
         IF EXISTS (SELECT 1 FROM Comprehensive_Evaluation WHERE StudentID = OLD.StudentID AND Term = student_term) THEN
             -- 更新记录
             UPDATE Comprehensive_Evaluation
-            SET Academic_Performance = avg_score
+            SET Academic_Performance = avg_score, Failed_courses = failed_courses
             WHERE StudentID = OLD.StudentID
               AND Term = student_term;
         ELSE
             -- 插入新记录
-            INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance)
-            VALUES (OLD.StudentID, student_term, avg_score);
+            INSERT INTO Comprehensive_Evaluation (StudentID, Term, Academic_Performance, Failed_courses)
+            VALUES (OLD.StudentID, student_term, avg_score, failed_courses);
         END IF;
     END IF;
 END$$

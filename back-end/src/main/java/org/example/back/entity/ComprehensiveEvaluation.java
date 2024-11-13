@@ -3,6 +3,7 @@ package org.example.back.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -35,5 +36,9 @@ public class ComprehensiveEvaluation {
 
     @Column(name = "Other_Score2", precision = 5, scale = 2)
     private BigDecimal otherScore2;
+
+    @ColumnDefault("0")
+    @Column(name = "Failed_courses")
+    private Integer failedCourses;
 
 }

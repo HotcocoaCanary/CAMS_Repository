@@ -6,7 +6,7 @@ import lombok.Getter;
  * @author Canary
  * @version 1.0.0
  * @title CourseStats
- * @description <TODO description class purpose>
+ * @description
  * @creat 2024/11/5 下午4:39
  **/ // Enum for CourseStats
 

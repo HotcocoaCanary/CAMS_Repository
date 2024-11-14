@@ -8,7 +8,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.back.entity.ComprehensiveEvaluation;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.Serializable;
 import java.io.IOException;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  * @author Canary
  * @version 1.0.0
  * @title CEExcelBuilder
- * @description <TODO description class purpose>
+ * @description 综测表格构建器
  * @creat 2024/11/13 下午8:31
  **/
 
@@ -63,8 +62,8 @@ public class CEExcelBuilder implements Serializable {
                 .collect(Collectors.groupingBy(ComprehensiveEvaluation::getAcademicPerformance));
 
         // 对德育和学习成绩进行排序
-        List<BigDecimal> sortedMorality = moralityRanking.keySet().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        List<BigDecimal> sortedAcademic = academicRanking.keySet().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        List<BigDecimal> sortedMorality = moralityRanking.keySet().stream().sorted(Comparator.reverseOrder()).toList();
+        List<BigDecimal> sortedAcademic = academicRanking.keySet().stream().sorted(Comparator.reverseOrder()).toList();
 
         // 填充数据
         int rowNum = 1;
@@ -127,7 +126,7 @@ public class CEExcelBuilder implements Serializable {
                             .add(e.getAcademicPerformance())
                             .add(e.getOtherScore1())
                             .add(e.getOtherScore2())));
-            List<BigDecimal> sortedTotalScores = totalScoreRanking.keySet().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+            List<BigDecimal> sortedTotalScores = totalScoreRanking.keySet().stream().sorted(Comparator.reverseOrder()).toList();
             int totalScoreRank = sortedTotalScores.indexOf(totalScore) + 1;
             row.createCell(12).setCellValue(totalScoreRank);
 

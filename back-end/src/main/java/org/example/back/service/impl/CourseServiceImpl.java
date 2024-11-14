@@ -1,7 +1,6 @@
 package org.example.back.service.impl;
 
 import jakarta.annotation.Resource;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.example.back.common.Term;
 import org.example.back.entity.ComprehensiveEvaluation;
 import org.example.back.entity.ComprehensiveEvaluationId;
@@ -14,17 +13,17 @@ import org.example.back.util.CourseExcelList;
 import org.example.back.util.OtherCourseExcelList;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Canary
  * @version 1.0.0
- * @title Coue
- * @description <TODO description class purpose>
+ * @title CourseServiceImpl
+ * @description 综测服务实现类
  * @creat 2024/11/8 下午10:32
  **/
 @Service
@@ -110,7 +109,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Workbook getComprehensiveEvaluation(User user, Term term) {
+    public CEExcelBuilder getComprehensiveEvaluation(User user, Term term) {
         // 直接查询指定班级和学期的综合评价
         String className = studentRepository.getClassNameByStudentId(user.getId());
         List<String> studentIdList = studentRepository.findAllStudentId(className);
@@ -123,13 +122,12 @@ public class CourseServiceImpl implements CourseService {
         Map<String, List<ComprehensiveEvaluation>> map = Collections.singletonMap(className, comprehensiveEvaluations);
 
         // 使用构建器生成Excel工作簿
-        CEExcelBuilder ceExcelBuilder = new CEExcelBuilder(map);
-        return ceExcelBuilder.getWorkbook();
+        return new CEExcelBuilder(map);
     }
 
 
     @Override
-    public Workbook getComprehensiveEvaluation(Term term) {
+    public CEExcelBuilder getComprehensiveEvaluation(Term term) {
         List<String> classNameList = classRepository.findAllClassName();
         Map<String,List<ComprehensiveEvaluation>> map = new HashMap<>();
         for(String className : classNameList){
@@ -140,7 +138,17 @@ public class CourseServiceImpl implements CourseService {
                     .toList();
             map.put(className, comprehensiveEvaluations);
         }
-        CEExcelBuilder ceExcelBuilder = new CEExcelBuilder(map);
-        return ceExcelBuilder.getWorkbook();
+        return new CEExcelBuilder(map);
+    }
+
+    @Override
+    public void closeWorkbook(CEExcelBuilder ceExcelBuilder){
+        if (ceExcelBuilder!=null){
+            try {
+                ceExcelBuilder.closeWorkbook();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

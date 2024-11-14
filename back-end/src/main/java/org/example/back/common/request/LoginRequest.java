@@ -6,7 +6,7 @@ import lombok.Data;
  * @author Canary
  * @version 1.0.0
  * @title LoginRequest
- * @description
+ * @description 登录请求体
  * @creat 2024/11/7 下午12:15
  **/
 

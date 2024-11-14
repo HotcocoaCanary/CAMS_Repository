@@ -12,13 +12,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 /**
  * @author Canary
  * @version 1.0.0
- * @title TeacherInterceptor
- * @description 教师身份验证器
- * @creat 2024/11/9 下午9:49
+ * @title AdminInterceptor
+ * @description 管理员身份判断器
+ * @creat 2024/11/14 上午8:26
  **/
-
 @Component
-public class TeacherInterceptor implements HandlerInterceptor {
+public class AdminInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -29,7 +28,7 @@ public class TeacherInterceptor implements HandlerInterceptor {
         User loginUser = (User) session.getAttribute("user");
 
         // 根据用户角色判断是否有权限访问资源
-        if (Role.TEACHER.equals(loginUser.getRole())||Role.ADMIN.equals(loginUser.getRole())) {
+        if (Role.ADMIN.equals(loginUser.getRole())) {
             return true; // 如果是教师，则放行
         } else {
             // 如果权限不足，可以设置响应状态码为403

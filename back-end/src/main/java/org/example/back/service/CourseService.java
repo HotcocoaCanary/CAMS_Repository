@@ -1,8 +1,8 @@
 package org.example.back.service;
 
-import org.apache.poi.ss.usermodel.Workbook;
 import org.example.back.common.Term;
 import org.example.back.entity.*;
+import org.example.back.util.CEExcelBuilder;
 
 /**
  * @author Canary
@@ -29,8 +29,9 @@ public interface CourseService {
 
     void insertOtherCourse(ComprehensiveEvaluation comprehensiveEvaluation);
 
-    Workbook getComprehensiveEvaluation(User user, Term term);
+    CEExcelBuilder getComprehensiveEvaluation(User user, Term term);
 
-    Workbook getComprehensiveEvaluation(Term term);
+    CEExcelBuilder getComprehensiveEvaluation(Term term);
 
+    void closeWorkbook(CEExcelBuilder ceExcelBuilder);
 }

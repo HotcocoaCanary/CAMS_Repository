@@ -1,42 +1,41 @@
-package org.example.back.controller;
+package org.example.back.controller.user;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpSession;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.example.back.common.Term;
-import org.example.back.entity.User;
 import org.example.back.service.CourseService;
 import org.example.back.util.CEExcelBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * @title UserStudentController
- * @description 学生可以用的操作
  * @author Canary
- * @creat 2024/11/13 下午11:40
  * @version 1.0.0
+ * @title AdminCEController
+ * @description 教师或班长对综测的操作
+ * @creat 2024/11/14 上午8:32
  **/
-
 @RestController
-@RequestMapping("/student")
-public class StudentController {
+@RequestMapping("/teacher/ce")
+public class CEController {
 
     @Resource
     private CourseService courseService;
 
-    @GetMapping("/ce")
-    public ResponseEntity<byte[]> register(@RequestParam Term term, HttpSession session) {
-        User loginUser = (User) session.getAttribute("user");
+    @GetMapping("/get")
+    public ResponseEntity<byte[]> register(@RequestParam Term term) {
         CEExcelBuilder ceExcelBuilder = null;
         try {
-            ceExcelBuilder = courseService.getComprehensiveEvaluation(loginUser, term);
+            ceExcelBuilder = courseService.getComprehensiveEvaluation(term);
             Workbook workbook = ceExcelBuilder.getWorkbook();
 
             // 将Workbook写入ByteArrayOutputStream
@@ -60,5 +59,13 @@ public class StudentController {
             courseService.closeWorkbook(ceExcelBuilder);
         }
     }
+    //<TODO 添加选课记录接口>
 
+    //<TODO 删除选课记录接口>
+
+    //<TODO 修改选课记录接口>
+
+    //<TODO 通过班级查询选课记录接口>
+
+    //<TODO 修改综测记录>
 }

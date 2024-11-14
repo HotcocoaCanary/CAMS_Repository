@@ -8,13 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author Canary
- * @version 1.0.0
- * @title TeacherRepository
- * @description
- * @creat 2024/11/7 上午11:53
- **/
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Modifying

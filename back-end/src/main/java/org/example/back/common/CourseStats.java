@@ -6,7 +6,7 @@ import lombok.Getter;
  * @author Canary
  * @version 1.0.0
  * @title CourseStats
- * @description
+ * @description 定义课程属性
  * @creat 2024/11/5 下午4:39
  **/ // Enum for CourseStats
 

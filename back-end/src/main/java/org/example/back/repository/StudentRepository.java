@@ -10,13 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * @author Canary
- * @version 1.0.0
- * @title TeacherRepository
- * @description
- * @creat 2024/11/7 上午11:53
- **/
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     @Modifying

@@ -62,15 +62,5 @@ public class AdminCEController {
 
 
     //<TODO 查询所有综测记录接口>
-    @PostMapping("/findComprehensiveEvaluationById")
-    public Response<String> findComprehensiveEvaluationById(@RequestBody ComprehensiveEvaluation comprehensiveEvaluation) {
-        try{
-            adminCEService.findComprehensiveEvaluationById(comprehensiveEvaluation);
-            return Response.success();
-        }catch (Exception e){
-            return Response.internalServerError();
-        }
-    }
-
 
 }

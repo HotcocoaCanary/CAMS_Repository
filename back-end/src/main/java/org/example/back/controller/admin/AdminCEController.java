@@ -1,5 +1,13 @@
 package org.example.back.controller.admin;
 
+import jakarta.annotation.Resource;
+import org.example.back.common.Response;
+import org.example.back.common.request.RegisterRequest;
+import org.example.back.entity.ComprehensiveEvaluation;
+import org.example.back.entity.User;
+import org.example.back.service.AdminCEService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,11 +23,54 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/ce")
 public class AdminCEController {
 
+    @Resource
+    private AdminCEService adminCEService;
+
     //<TODO 添加综测记录接口>
+    @PostMapping("/addComprehensiveEvaluation")
+    public Response<String> addComprehensiveEvaluation(@RequestBody ComprehensiveEvaluation comprehensiveEvaluation) {
+        try{
+            adminCEService.addComprehensiveEvaluation(comprehensiveEvaluation);
+            return Response.success();
+        }catch (Exception e){
+            return Response.internalServerError();
+        }
+    }
 
     //<TODO 删除综测记录接口>
+    @PostMapping("/deleteComprehensiveEvaluation")
+    public Response<String> deleteComprehensiveEvaluation(@RequestBody ComprehensiveEvaluation comprehensiveEvaluation) {
+        try{
+            adminCEService.deleteComprehensiveEvaluation(comprehensiveEvaluation);
+            return Response.success();
+        }catch (Exception e){
+            return Response.internalServerError();
+        }
+    }
+
 
     //<TODO 修改综测记录接口>
+    @PostMapping("/updateComprehensiveEvaluation")
+    public Response<String> updateComprehensiveEvaluation(@RequestBody ComprehensiveEvaluation comprehensiveEvaluation) {
+        try{
+            adminCEService.updateComprehensiveEvaluation(comprehensiveEvaluation);
+            return Response.success();
+        }catch (Exception e){
+            return Response.internalServerError();
+        }
+    }
+
 
     //<TODO 查询所有综测记录接口>
+    @PostMapping("/findComprehensiveEvaluationById")
+    public Response<String> findComprehensiveEvaluationById(@RequestBody ComprehensiveEvaluation comprehensiveEvaluation) {
+        try{
+            adminCEService.findComprehensiveEvaluationById(comprehensiveEvaluation);
+            return Response.success();
+        }catch (Exception e){
+            return Response.internalServerError();
+        }
+    }
+
+
 }

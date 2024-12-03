@@ -1,5 +1,11 @@
 package org.example.back.controller.admin;
 
+import jakarta.annotation.Resource;
+import org.example.back.common.Response;
+import org.example.back.entity.Teacher;
+import org.example.back.service.TeacherService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,8 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/teacher")
 public class AdminTeacherController {
+    @Resource
+    private TeacherService teacherService;
 
     //<TODO 添加教师接口>
+    @PostMapping("/add")
+    public Response<String> addTeacher(@RequestBody Teacher teacher) {
+        teacherService.add(teacher);
+        return Response.success();
+    }
 
     //<TODO 删除教师接口>
 

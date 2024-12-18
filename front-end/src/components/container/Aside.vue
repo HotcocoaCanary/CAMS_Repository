@@ -26,7 +26,7 @@
       </el-menu-item>
       <el-menu-item index="/search" class="rounded-menu-item menu-item">
         <i class="el-icon-search"></i>
-        <template #title>查询综合测评</template>
+        <template #title>导出综合测评</template>
       </el-menu-item>
       <el-menu-item index="/approval" class="rounded-menu-item menu-item">
         <i class="el-icon-document-checked"></i>

@@ -1,67 +1,107 @@
 CREATE DATABASE CAMS_repository_db;
 USE CAMS_repository_db;
 
--- 用户表（教师和学生合并）
-CREATE TABLE Users
-(
-    ID         varchar(50)                       NOT NULL,              # 工号/学号，主键
-    Password   varchar(50)                       NOT NULL,              # 密码
-    Name       varchar(50)                       NOT NULL,              # 姓名
-    Gender varchar(50)                                    NOT NULL,     # 性别
-    Role   enum ('TEACHER', 'STUDENT' ,'ADMIN') NOT NULL,     # 身份
-    PRIMARY KEY (ID)
-);
+-- 创建用户表
+CREATE TABLE `User` (
+                        `user_id` VARCHAR(20) PRIMARY KEY COMMENT '学号或者工号',
+                        `username` VARCHAR(50) NOT NULL COMMENT '用户名',
+                        `pwd_hash` VARCHAR(255) NOT NULL COMMENT '密码哈希',
+                        `role` ENUM('admin','instructor','student') NOT NULL COMMENT '角色'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Teachers
-(
-    TeacherID  varchar(50) PRIMARY KEY,
-    Department varchar(50) NOT NULL,
-    FOREIGN KEY (TeacherID) REFERENCES Users (ID)
-);
+-- 创建专业表
+CREATE TABLE `Major` (
+                         `major_code` VARCHAR(10) PRIMARY KEY COMMENT '专业代码',
+                         `name` VARCHAR(50) NOT NULL COMMENT '专业名称',
+                         `college` VARCHAR(50) NOT NULL COMMENT '所属学院'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 班级表
-CREATE TABLE Classes
-(
-    Name       varchar(50) NOT NULL, # 班级名称
-    Grade      varchar(50) NOT NULL,
-    Department varchar(50) NOT NULL, # 所属院系
-    TeacherID  varchar(50),
-    PRIMARY KEY (Name),
-    FOREIGN KEY (TeacherID) REFERENCES Teachers (TeacherID)
-);
+-- 创建教师表
+CREATE TABLE `Instructor` (
+                              `user_id` VARCHAR(20) PRIMARY KEY COMMENT '工号',
+                              `name` VARCHAR(50) NOT NULL COMMENT '姓名',
+                              FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Students
-(
-    StudentID  varchar(50) PRIMARY KEY,
-    Class_name varchar(50),
-    FOREIGN KEY (StudentID) REFERENCES Users (ID),
-    FOREIGN KEY (Class_name) REFERENCES Classes (Name)
-);
+-- 创建班级表
+CREATE TABLE `Class` (
+                         `class_id` VARCHAR(20) PRIMARY KEY COMMENT '班级ID',
+                         `major_code` VARCHAR(10) NOT NULL COMMENT '所属专业',
+                         `year` INT NOT NULL COMMENT '入学年份',
+                         `instructor_id` VARCHAR(20) NOT NULL COMMENT '班主任ID',
+                         FOREIGN KEY (`major_code`) REFERENCES `Major`(`major_code`),
+                         FOREIGN KEY (`instructor_id`) REFERENCES `Instructor`(`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 学生选课表（更新分数范围）
-CREATE TABLE Student_Course
-(
-    StudentID varchar(50)                 NOT NULL,                                                                     # 学生学号，外键（指向Users表的ID）
-    Name      varchar(50)                 NOT NULL,                                                                     # 课程名称
-    Score     decimal(5, 2) CHECK (Score >= 0 AND Score <= 100),                                                        # 成绩，范围0-100
-    Credit    double                      NOT NULL,                                                                     # 学分
-    Stats     enum ('REQUIRED', 'LIMITED', 'ELECTIVE') NOT NULL DEFAULT 'REQUIRED',                                                      # 选课属性
-    Term      enum ('FRESHMAN_FALL', 'FRESHMAN_SPRING', 'SOPHOMORE_FALL', 'SOPHOMORE_SPRING', 'JUNIOR_FALL', 'JUNIOR_SPRING', 'SENIOR_FALL', 'SENIOR_SPRING') NOT NULL DEFAULT 'FRESHMAN_FALL', # 学期
-    PRIMARY KEY (StudentID,Name,Term),
-    CONSTRAINT fk_Student_Course_StudentID FOREIGN KEY (StudentID) REFERENCES Users (ID)
-);
+-- 创建学生表
+CREATE TABLE `Student` (
+                           `user_id` VARCHAR(20) PRIMARY KEY COMMENT '学号',
+                           `name` VARCHAR(50) NOT NULL COMMENT '姓名',
+                           `class_id` VARCHAR(20) NOT NULL COMMENT '所属班级',
+                           `is_monitor` BOOLEAN DEFAULT false COMMENT '是否班长',
+                           FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)ON DELETE CASCADE,
+                           FOREIGN KEY (`class_id`) REFERENCES `Class`(`class_id`)ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 综合测评表（更新分数范围）
-CREATE TABLE Comprehensive_Evaluation
-(                                                                       # 测评记录编号，主键，自增
-    Term                 enum ('FRESHMAN_FALL', 'FRESHMAN_SPRING', 'SOPHOMORE_FALL', 'SOPHOMORE_SPRING', 'JUNIOR_FALL', 'JUNIOR_SPRING', 'SENIOR_FALL', 'SENIOR_SPRING') NOT NULL DEFAULT 'FRESHMAN_FALL', # 学期
-    Academic_Performance decimal(5, 2) DEFAULT 0.00,                           # 学习成绩，范围0-60
-    Morality             decimal(5, 2) DEFAULT 0.00,                                                   # 思想品德表现，范围0-15
-    Failed_courses       int DEFAULT 0,    # 挂科数量
-    Sports_Achievement   decimal(5, 2) DEFAULT 6.00,
-    Other_Score1         decimal(5, 2) DEFAULT 0.00,                                           # 其他得分1，范围0-10
-    Other_Score2         decimal(5, 2) DEFAULT 0.00,                                            # 其他得分2，范围0-5
-    StudentID            varchar(50) NOT NULL,                                                                                        # 学生学号，外键（指向Users表的ID）
-    PRIMARY KEY (StudentID,Term),
-    CONSTRAINT fk_Comprehensive_Evaluation_StudentID FOREIGN KEY (StudentID) REFERENCES Users (ID)
-);
+-- 创建学期表
+CREATE TABLE `Semester` (
+                            `semester_id` VARCHAR(20) PRIMARY KEY COMMENT '学期ID',
+                            `academic_year` VARCHAR(9) NOT NULL COMMENT '学年',
+                            `term` ENUM('春','秋') NOT NULL COMMENT '学期'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 创建课程表
+CREATE TABLE `Course` (
+                          `course_id` VARCHAR(20) PRIMARY KEY COMMENT '课程ID',
+                          `name` VARCHAR(100) NOT NULL COMMENT '课程名称',
+                          `credits` FLOAT NOT NULL COMMENT '学分'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 创建教学计划表
+CREATE TABLE `TeachingPlan` (
+                                `plan_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '规划ID',
+                                `major_code` VARCHAR(10) NOT NULL COMMENT '专业代码',
+                                `course_id` VARCHAR(20) NOT NULL COMMENT '课程ID',
+                                `semester_id` VARCHAR(20) NOT NULL COMMENT '学期ID',
+                                `course_category` ENUM('必修','限选','选修') NOT NULL COMMENT '课程类型',
+                                FOREIGN KEY (`major_code`) REFERENCES `Major`(`major_code`),
+                                FOREIGN KEY (`course_id`) REFERENCES `Course`(`course_id`),
+                                FOREIGN KEY (`semester_id`) REFERENCES `Semester`(`semester_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 创建选课表
+CREATE TABLE `CourseSelection` (
+                                   `student_id` VARCHAR(20) COMMENT '学生ID',
+                                   `course_id` VARCHAR(20) COMMENT '课程ID',
+                                   `semester_id` VARCHAR(20) COMMENT '学期ID',
+                                   `score` FLOAT DEFAULT NULL COMMENT '课程成绩',
+                                   `status` ENUM('正常','重修','挂科') NOT NULL COMMENT '状态',
+                                   PRIMARY KEY (`student_id`, `course_id`, `semester_id`),
+                                   FOREIGN KEY (`student_id`) REFERENCES `Student`(`user_id`) ON DELETE CASCADE,
+                                   FOREIGN KEY (`course_id`) REFERENCES `Course`(`course_id`),
+                                   FOREIGN KEY (`semester_id`) REFERENCES `Semester`(`semester_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 创建加分表
+CREATE TABLE `BonusPoint` (
+                              `bonus_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '加分ID',
+                              `student_id` VARCHAR(20) NOT NULL COMMENT '学生ID',
+                              `semester_id` VARCHAR(20) NOT NULL COMMENT '学期ID',
+                              `value` FLOAT NOT NULL COMMENT '加分值',
+                              FOREIGN KEY (`student_id`) REFERENCES `Student`(`user_id`)ON DELETE CASCADE,
+                              FOREIGN KEY (`semester_id`) REFERENCES `Semester`(`semester_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 创建综评结果表
+CREATE TABLE `EvaluationResult` (
+                                    `student_id` VARCHAR(20) COMMENT '学生ID',
+                                    `semester_id` VARCHAR(20) COMMENT '学期ID',
+                                    `academic_score` FLOAT NOT NULL COMMENT '学业成绩(60%)',
+                                    `sports_score` FLOAT NOT NULL COMMENT '体育成绩(10%)',
+                                    `moral_score` FLOAT NOT NULL COMMENT '德育成绩(15%)',
+                                    `other_bonus1` FLOAT NOT NULL COMMENT '其他加分1(5%)',
+                                    `other_bonus2` FLOAT NOT NULL COMMENT '其他加分2(10%)',
+                                    PRIMARY KEY (`student_id`, `semester_id`),
+                                    FOREIGN KEY (`student_id`) REFERENCES `Student`(`user_id`)ON DELETE CASCADE,
+                                    FOREIGN KEY (`semester_id`) REFERENCES `Semester`(`semester_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

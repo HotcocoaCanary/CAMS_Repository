@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.back.mapper.ScoreMapper">
+    <insert id="initCourseSelection">
+        insert IGNORE into courseselection(student_id,course_id,semester_id) values (#{studentId},#{courseId},#{semesterId})
+    </insert>
+    <update id="setScoreToDb">
+        update courseselection set score = #{score},status = #{status} where student_id=#{studentId} AND course_id=#{courseId} AND semester_id=#{semesterId}
+    </update>
+    <select id="getRebuild" resultType="java.lang.String">
+        select student_id from courseselection where student_id=#{studentId} AND course_id=#{courseId}
+    </select>
+    <select id="getAllStudentIds">
+        SELECT DISTINCT student_id FROM courseselection ORDER BY student_id
+    </select>
+    <select id="getScore1" resultType="org.example.back.entity.CourseInfo">
+        SELECT
+            cs.student_id AS studentId,
+            cs.course_id AS courseId,
+            c.name AS courseName,
+            c.credits,
+            cs.score,
+            cs.semester_id AS semester
+        FROM courseselection cs
+                 JOIN course c ON cs.course_id = c.course_id
+                 JOIN teachingplan tp ON cs.course_id = tp.course_id
+            AND cs.semester_id = tp.semester_id
+            AND tp.major_code = (
+                SELECT cl.major_code
+                FROM student s
+                         JOIN class cl ON s.class_id = cl.class_id
+                WHERE s.user_id = #{studentId}
+            )
+        WHERE cs.student_id = #{studentId}
+          AND cs.semester_id = #{semesterId}
+        ORDER BY cs.course_id;
+    </select>
+    <select id="getScore2" resultType="org.example.back.entity.CourseInfo">
+        SELECT
+            cs.student_id AS studentId,
+            cs.course_id AS courseId,
+            c.name AS courseName,
+            c.credits,
+            cs.score,
+            cs.semester_id AS semester
+        FROM courseselection cs
+                 JOIN course c ON cs.course_id = c.course_id
+                 JOIN teachingplan tp ON cs.course_id = tp.course_id
+            AND cs.semester_id = tp.semester_id
+            AND tp.major_code = (
+                SELECT cl.major_code
+                FROM student s
+                         JOIN class cl ON s.class_id = cl.class_id
+                WHERE s.user_id = #{studentId}
+            )
+        WHERE cs.student_id = #{studentId}
+          AND cs.semester_id = #{semesterId}
+          AND tp.course_category IN ('必修','选修')
+        ORDER BY cs.course_id;
+    </select>
+    <select id="getScore3" resultType="org.example.back.entity.CourseInfo">
+        SELECT
+            cs.student_id AS studentId,
+            cs.course_id AS courseId,
+            c.name AS courseName,
+            c.credits,
+            cs.score,
+            cs.semester_id AS semester
+        FROM courseselection cs
+                 JOIN course c ON cs.course_id = c.course_id
+                 JOIN teachingplan tp ON cs.course_id = tp.course_id
+            AND cs.semester_id = tp.semester_id
+            AND tp.major_code = (
+                SELECT cl.major_code
+                FROM student s
+                         JOIN class cl ON s.class_id = cl.class_id
+                WHERE s.user_id = #{studentId}
+            )
+        WHERE cs.student_id = #{studentId}
+          AND cs.semester_id = #{semesterId}
+          AND tp.course_category = '必修'
+        ORDER BY cs.course_id;
+    </select>
+    <update id="computeAcademic_score1">
+        update evaluationresult set academic_score = #{academicScore} where student_id=#{studentId} AND semester_id=#{semesterId}
+    </update>
+    <update id="computeAcademic_score2">
+        update evaluationresult set academic_score_LimitedSelection_AND_Compulsory = #{academicScore} where student_id=#{studentId} AND semester_id=#{semesterId}
+    </update>
+    <update id="computeAcademic_score3">
+        update evaluationresult set academic_score_Compulsory = #{academicScore} where student_id=#{studentId} AND semester_id=#{semesterId}
+    </update>
+    <insert id="initEvaluationResult">
+        insert into evaluationresult(student_id,semester_id,academic_score,academic_score_LimitedSelection_AND_Compulsory,academic_score_Compulsory,sports_score,moral_score,other_bonus1,other_bonus2) values (#{studentId},#{semesterId},0,0,0,0,0,0,0)
+    </insert>
+    <select id="getAllStudentIdsAndSemester" resultType="org.example.back.entity.AllStudentIdsAndSemester">
+        SELECT DISTINCT student_id,semester_id FROM courseselection where semester_id = #{semesterId} ORDER BY student_id AND semester_id
+    </select>
+</mapper>
